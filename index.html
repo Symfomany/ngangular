@@ -18,10 +18,36 @@
     <h1>Bonjour !</h1>
 
     <div ng-controller="MainCtrl as main">
-        <h3 class="alert alert-success">{{ main.title }}</h3>
+        <h3 class="alert alert-success">{{ main.title | limitTo : 10 }}</h3>
+        </p>Nb de caractères : {{ main.nbCar }}</p>
+        <p>{{ main.subtitle }}</p>
+
+
+        <input ng-disabled="main.title == 'OFF'" type="text" ng-blur="main.majuscule()" ng-model="main.title">
+        <div ng-if="main.title == 'Julien'">
+            <p>C'est moi comment je m'appelle</p>
+        </div>
+        <div ng-class='{" alert alert-danger " : main.title == "Wesh Alors",
+                        " alert alert-success" :  main.title != "Wesh Alors", }'>
+            <p>J'adore JUL</p>
+        </div>
+
+        <button type="button" ng-click="main.reset()">Reset</button>
+
+        <input type="text" ng-model="main.limit" placeholder="Nb de prenoms">
+        <ul>
+            <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limit  | orderBy: prenom ">
+                {{ personnage.pseudo }}
+            </li>
+        </ul>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <div ng-controller="SecondCtrl as second">
+        <h1>{{ second.title }}</h1>
+        <p>{{ second.nbPersos }} </p>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
