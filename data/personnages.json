@@ -5,7 +5,7 @@
             "lat": "45.764043",
             "long": "4.835659"
         },
-        "dislike": 50,
+        "dislike": 65,
         "created": 1483590612,
         "id": 1,
         "like": 150,
@@ -160,7 +160,7 @@
         "pseudo": "Negan",
         "resume": "Negan est un personnage de fiction dans la série de comics The Walking Dead. Il est le chef d'un groupe d'environ une centaine de survivants (principalement des hommes) établi à Washington, DC et appelé les Sauveurs (The Saviors en VO) qui soumettent les communautés voisines pour leurs ressources, en échange de quoi, ils offrent leur protection contre les zombies.",
         "saison": [6, 7],
-        "sexe": false
+        "sexe": true
     }, {
         "activite": "Chef",
         "created": 1483445530,

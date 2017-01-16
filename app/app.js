@@ -2,8 +2,10 @@
     'use strict';
 
     angular
-        .module('app', [
-            'app.main'
-        ]);
+        .module('app', [])
+        .controller('MainCtrl', function() {
+            var vm = this;
+            vm.title = "Hello Audivox :)"
+        });
 
 }());

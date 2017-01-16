@@ -5,26 +5,38 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="" href="">
+    <link rel="stylesheet" type="" href="./node_modules/font-awesome/css/font-awesome.min.css">
 
-    <!-- Avant le chargement de la DOM -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
-    <script src="./dist/js/app.min.js"></script>
+    <link rel="stylesheet" type="" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="" href="./node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="" href="./node_modules/animate.css/animate.min.css">
 
 </head>
 
 <body>
 
-    <h1>Hello World</h1>
+    <h1>Bonjour !</h1>
 
     <div ng-controller="MainCtrl as main">
-        <h3>{{ main.title }}</h3>
-        <input ng-model="main.title" />
-        <button type="button" ng-click="main.formattage()">Formattez-moi!</button>
+        <h3 class="alert alert-success">{{ main.title }}</h3>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+    <!--add lodash for request-->
+    <script src="./node_modules/lodash/lodash.min.js"></script>
+
+    <!--gmap with my key-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUO9bGSDODUZfUjbtaYeuoy8VGimyhGM">
+    </script>
+
+    <!-- Avant le chargement de la DOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script src="./dist/js/app.min.js"></script>
+
 
 </body>
 

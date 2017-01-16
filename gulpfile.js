@@ -7,23 +7,23 @@
  *  Watches & compiles SASS files
  *  Watches & injects CSS files
  */
-var browserSync = require('browser-sync');
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var size = require('gulp-size');
-var uncss = require('gulp-uncss');
-var filter = require('gulp-filter');
-var concat = require('gulp-concat');
-var notify = require("gulp-notify");
-var minifyCss = require('gulp-minify-css');
-var autoprefixer = require('gulp-autoprefixer');
-var rename = require('gulp-rename');
-var clean = require('gulp-clean');
-var cache = require('gulp-cache');
-var imagemin = require('gulp-imagemin');
-var sourcemaps = require('gulp-sourcemaps');
-var plumber = require('gulp-plumber');
-var ngmin = require('gulp-ngmin');
+let browserSync = require('browser-sync');
+let gulp = require('gulp');
+let sass = require('gulp-sass');
+let size = require('gulp-size');
+let uncss = require('gulp-uncss');
+let filter = require('gulp-filter');
+let concat = require('gulp-concat');
+let notify = require("gulp-notify");
+let minifyCss = require('gulp-minify-css');
+let autoprefixer = require('gulp-autoprefixer');
+let rename = require('gulp-rename');
+let clean = require('gulp-clean');
+let cache = require('gulp-cache');
+let imagemin = require('gulp-imagemin');
+let sourcemaps = require('gulp-sourcemaps');
+let plumber = require('gulp-plumber');
+let ngmin = require('gulp-ngmin');
 
 //add
 let gutil = require("gulp-util");
@@ -34,9 +34,9 @@ let templateCache = require('gulp-angular-templatecache');
 
 
 //init and reload brower
-var reload = browserSync.reload;
-var validator = require('is-my-json-valid/require')
-
+let reload = browserSync.reload;
+let validator = require('is-my-json-valid/require')
+let protractor = require("gulp-protractor").protractor;
 
 /**
  * Some configuration
@@ -47,14 +47,23 @@ let config = {
     assetDir: './assets/',
     distDir: './dist/',
     imgDir: this.assetDir + 'images/',
-    sassDir: this.assetDir + 'sass/',
     rootIndex: './index.html',
+    sassFiles: [ //not order because it's oriented components
+        "app/pages/**/*.scss",
+        "app/directives/**/*.scss",
+        "app/components/**/*.scss",
+    ],
     jsFiles: [
         "app/app.js",
         "app/app.config.js",
         "app/app.constants.js",
         "app/app.routes.js",
-        "app/components/**/*.controller.js" //all controllers
+        "app/components/**/*.component.js", //all components
+        "app/directives/**/*.directive.js", //all factories
+        "app/pages/**/*.factory.js", //all factories
+        "app/pages/**/*.controller.js", //all controllers
+        "app/pages/**/*.filter.js", //all controllers
+
     ]
 }
 
@@ -95,19 +104,34 @@ gulp.task('clean', function() {
         .pipe(clean());
 });
 
+/**
+ * Protractor Test
+ */
+gulp.task('tests', function() {
+    gulp.src(["./tests/e2e/**/*.spec.js"])
+        .pipe(protractor({
+            configFile: "./protractor.conf.js",
+            args: ['--baseUrl', 'http://localhost:4000']
+        }))
+
+    .on('error', function(e) { throw e })
+        .pipe(notify({ message: 'Tests lancées' }));
+});
+
 
 
 // Sass task, will run when any SCSS files change.
 gulp.task('css', function() {
-    return gulp.src(config.sassDir + 'main.scss')
+    return gulp.src(config.sassFiles)
         .pipe(plumber({
             errorHandler: notify.onError("Error: <%= error.message %>")
         }))
         .pipe(sourcemaps.init())
         .pipe(sass({ style: 'expanded', }))
+        .pipe(concat('main.css'))
         //.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(minifyCss())
+        //.pipe(minifyCss())
         // .pipe(uncss({
         //         html: ['*.html']
         //     }))
@@ -120,7 +144,7 @@ gulp.task('css', function() {
 //For js
 gulp.task('js', function() {
 
-    var validate = validator('./data/gmap.json')
+    let validate = validator('./data/personnages.json')
     if (!validate.errors) {
         notify("Aucune erreur JSON")
     } else {
@@ -156,8 +180,10 @@ gulp.task('images', function() {
 
 
 // Default task to be run with `gulp`
-gulp.task('default', ['browser-sync', 'css', 'js'], function() {
+gulp.task('default', ['clean', 'browser-sync', 'css', 'js'], function() {
     //gulp.watch("sass/**/*.scss", ['css']); // watch permet de regarder les changements de fichier et lancer les tâches que l'on souhaite
     gulp.watch(["app/**/**/*.js"], ['js']);
+    gulp.watch(["app/**/**/*.scss"], ['css']);
+    gulp.watch(["tests/**/**/*.js"], ['tests']);
     gulp.watch(["*.html", "app/**/*.html"]).on('change', browserSync.reload); //reload on HTML
 });
