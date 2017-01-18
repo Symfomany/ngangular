@@ -28,6 +28,11 @@
 
         var main = {
             url: '/',
+            resolve: {
+                personnages: function(PersonnageFactory) {
+                    return PersonnageFactory.all();
+                },
+            },
             templateUrl: './app/pages/main/main.html',
             controller: 'MainCtrl',
             controllerAs: 'main'
@@ -43,6 +48,11 @@
 
         var detail = {
             url: '/detail/:id',
+            resolve: {
+                personnage: function(PersonnageFactory, $stateParams) {
+                    return PersonnageFactory.one($stateParams.id);
+                },
+            },
             templateUrl: './app/pages/detail/detail.html',
             controller: 'DetailCtrl',
             controllerAs: 'detail'

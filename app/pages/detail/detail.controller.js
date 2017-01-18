@@ -1,14 +1,21 @@
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('app.detail', [])
+        .module('app.detail', ['app.main'])
         .controller('DetailCtrl', DetailController);
 
-    DetailController.$inject = ['$stateParams'];
-    function DetailController($stateParams) {
+    DetailController.$inject = ['PersonnageFactory', 'personnage'];
+    function DetailController(PersonnageFactory, personnage) {
         var vm = this;
-        console.log($stateParams.id);
+        vm.remove = remove;
+        vm.elt = personnage;
+
+        function remove() {
+            PersonnageFactory.remove(vm.tableau, personnage);
+        }
+
+
 
     }
 })();

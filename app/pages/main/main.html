@@ -21,10 +21,25 @@
 <ul>
     <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limit  | orderBy: prenom ">
         <a ui-sref="detail({id: personnage.id})">{{ personnage.pseudo }}</a>
+        <p>{{ personnage.resume|limitTo: 200 }}</p>
+        <p class="label label-success"> {{ personnage.note }} / 5</p>
         <a class="btn btn-success btn-xs" ng-click="main.remove(personnage)">X</a>
     </li>
 </ul>
 
-<form ng-submit="main.add()">
-    <input type="text" ng-model="main.pseudoAdd" placeholder="pseudo" required class="form-control">
+<form ng-submit="main.add()" name="formAdd" novalidate>
+    <input required name="pseudo" type="text" ng-model="main.objAdd.pseudo" placeholder="pseudo" required class="form-control">
+    <div ng-show="formAdd.$submitted || formAdd.pseudo.$touched">
+        <div ng-show="formAdd.pseudo.$error.required">Pseudo est requis</div>
+    </div>
+
+    <input required pattern="^[0-9]{1}$" type="number" name="note" ng-model="main.objAdd.note" class="form-control" placeholder="note"
+        min="1" max="5">
+
+    <div ng-show="formAdd.$submitted || formAdd.note.$touched">
+        <div ng-show="formAdd.note.$error.pattern">Pattern note</div>
+    </div>
+    <textarea required placeholder="resume" ng-model="main.objAdd.resume" name="resume" class="form-control"></textarea>
+
+    <button ng-disabled="formAdd.$invalid" class="btn btn-success" type="submit">Enregistrer ce personnage</button>
 </form>

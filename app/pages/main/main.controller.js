@@ -1,13 +1,13 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('app.main', ['LocalStorageModule', 'rzModule'])
         .controller('MainCtrl', MainController);
 
-    MainController.$inject = ['$log', '$scope', '$http', '$rootScope', '$window', '$interval', '$timeout', '$filter', '$q', 'localStorageService'];
+    MainController.$inject = ['$log', '$scope', '$http', '$rootScope', '$window', '$interval', '$timeout', '$filter', '$q', 'localStorageService', 'personnages', 'PersonnageFactory'];
 
-    function MainController($log, $scope, $http, $rootScope, $window, $interval, $timeout, $filter, $q, localStorageService) {
+    function MainController($log, $scope, $http, $rootScope, $window, $interval, $timeout, $filter, $q, localStorageService, personnages, PersonnageFactory) {
 
         var vm = this;
         vm.subtitle = "Je m'appelle Julien";
@@ -23,6 +23,9 @@
             floor: 0,
             ceil: 30
         };
+        vm.tableau = personnages;
+
+        vm.objAdd = {};
 
         vm.title = localStorageService.get('title') ? localStorageService.get('title') : "";
         vm.nbCar = vm.title.length;
@@ -99,13 +102,9 @@
         //     $log.warn('Force Awaken')
         // }, 2000);
 
-        $http.get('./data/personnages.json', { cache: true }).then(function (response) {
-            vm.tableau = response.data.data;
-            $rootScope.$broadcast('nbPersonnage', { nbPersonnage: vm.tableau.length });
-        });
 
 
-        setInterval(function () {
+        setInterval(function() {
             //$scope.$apply(function () {
             vm.subtitle = "Sous-titre changé";
             $scope.$digest();
@@ -113,11 +112,11 @@
         }, 2000);
 
 
-        $scope.$watch('main.tableau', function (current, old) {
+        $scope.$watch('main.tableau', function(current, old) {
             $log.info(current);
         }, true);
 
-        $scope.$watch('main.title', function (old, current) {
+        $scope.$watch('main.title', function(old, current) {
             $log.info(old, current);
             vm.nbCar = vm.title.length;
             localStorageService.set('title', vm.title);
@@ -125,15 +124,16 @@
 
 
         function remove(personnage) {
-            var index = vm.tableau.indexOf(personnage);
-            vm.tableau.splice(index, 1);
+            vm.tableau = PersonnageFactory.remove(vm.tableau, personnage);
         }
 
         function add() {
-            vm.tableau.push({
-                pseudo: vm.pseudoAdd
-            });
-            vm.pseudoAdd = "";
+            vm.tableau.push(vm.objAdd);
+            vm.objAdd = {
+                pseudo: "",
+                note: "",
+                resume: ""               
+            };
 
             if (vm.tableau.length >= 15) {
                 vm.tableau = $filter('limit')(vm.tableau, 10);
