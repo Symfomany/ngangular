@@ -1,5 +1,5 @@
 <div>
-    <rzslider rz-slider-options="main.optionsSlider" rz-slider-model="main.limit"></rzslider>
+    <rzslider rz-slider-options="main.optionsRz" rz-slider-model="main.limit"></rzslider>
 </div>
 <h3 class="alert alert-success">{{ main.title | limitTo : 10 }}</h3>
 </p>Nb de caractères : {{ main.nbCar }}</p>
@@ -19,8 +19,8 @@
 
 
 <ul>
-    <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limited  | orderBy: prenom ">
-        {{ personnage.pseudo }}
+    <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limit  | orderBy: prenom ">
+        <a ui-sref="detail({id: personnage.id})">{{ personnage.pseudo }}</a>
         <a class="btn btn-success btn-xs" ng-click="main.remove(personnage)">X</a>
     </li>
 </ul>

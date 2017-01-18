@@ -18,15 +18,10 @@
         vm.remove = remove;
         vm.add = add;
         vm.pseudoAdd = "";
-        vm.limit = 0;
+        vm.limit = 16;
         vm.optionsRz = {
-            value: 16,
-            min: 1,
-            max: 100,
-            options: {
-                floor: 0,
-                ceil: 450
-            }
+            floor: 0,
+            ceil: 30
         };
 
         vm.title = localStorageService.get('title') ? localStorageService.get('title') : "";
@@ -109,12 +104,18 @@
             $rootScope.$broadcast('nbPersonnage', { nbPersonnage: vm.tableau.length });
         });
 
+
         setInterval(function () {
             //$scope.$apply(function () {
             vm.subtitle = "Sous-titre changé";
             $scope.$digest();
             // });
         }, 2000);
+
+
+        $scope.$watch('main.tableau', function (current, old) {
+            $log.info(current);
+        }, true);
 
         $scope.$watch('main.title', function (old, current) {
             $log.info(old, current);
