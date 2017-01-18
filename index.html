@@ -11,41 +11,28 @@
     <link rel="stylesheet" type="" href="./node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="" href="./node_modules/animate.css/animate.min.css">
 
+    <link rel="stylesheet" type="" href="./node_modules/angularjs-slider/dist/rzslider.css">
+
+
+    <style>
+        .active {
+            color: red;
+            font-weight: bolder;
+        }
+    </style>
+
 </head>
 
 <body>
 
-    <h1>Bonjour !</h1>
+    <ul class="list">
+        <li><a ui-sref-active="active" ui-sref="main">Main</a></li>
+        <li><a ui-sref-active="active" ui-sref="contact">Contact</a></li>
+        <li><a ui-sref-active="active" ui-sref="about">About</a></li>
+    </ul>
+    <div ui-view></div>
 
-    <div ng-controller="MainCtrl as main">
-        <h3 class="alert alert-success">{{ main.title | limitTo : 10 }}</h3>
-        </p>Nb de caractères : {{ main.nbCar }}</p>
-        <p>{{ main.subtitle }}</p>
 
-
-        <input ng-disabled="main.title == 'OFF'" type="text" ng-blur="main.majuscule()" ng-model="main.title">
-        <div ng-if="main.title == 'Julien'">
-            <p>C'est moi comment je m'appelle</p>
-        </div>
-        <div ng-class='{" alert alert-danger " : main.title == "Wesh Alors",
-                        " alert alert-success" :  main.title != "Wesh Alors", }'>
-            <p>J'adore JUL</p>
-        </div>
-
-        <button type="button" ng-click="main.reset()">Reset</button>
-
-        <input type="text" ng-model="main.limit" placeholder="Nb de prenoms">
-        <ul>
-            <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limit  | orderBy: prenom ">
-                {{ personnage.pseudo }}
-            </li>
-        </ul>
-    </div>
-
-    <div ng-controller="SecondCtrl as second">
-        <h1>{{ second.title }}</h1>
-        <p>{{ second.nbPersos }} </p>
-    </div>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -61,6 +48,13 @@
 
     <!-- Avant le chargement de la DOM -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+
+    <script src="./node_modules/angular-local-storage/dist/angular-local-storage.min.js"></script>
+    <script src="./node_modules/angularjs-slider/dist/rzslider.min.js"></script>
+
+    <script src="./node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+
     <script src="./dist/js/app.min.js"></script>
 
 

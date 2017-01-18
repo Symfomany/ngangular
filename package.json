@@ -8,6 +8,7 @@
     "angular-google-maps": "^2.4.1",
     "angular-mocks": "^1.6.1",
     "angular-ui-router": "^0.3.2",
+    "angularjs-slider": "^6.0.0",
     "animate.css": "^3.5.2",
     "bootstrap": "^3.3.7",
     "browser-sync": "^2.14.0",

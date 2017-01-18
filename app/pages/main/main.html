@@ -1,0 +1,30 @@
+<div>
+    <rzslider rz-slider-options="main.optionsSlider" rz-slider-model="main.limit"></rzslider>
+</div>
+<h3 class="alert alert-success">{{ main.title | limitTo : 10 }}</h3>
+</p>Nb de caractères : {{ main.nbCar }}</p>
+<p>{{ main.subtitle }}</p>
+
+
+<input ng-disabled="main.title == 'OFF'" placeholder="nom de personne" type="text" ng-blur="main.majuscule()" ng-model="main.title">
+<div ng-if="main.title == 'Julien'">
+    <p>C'est moi comment je m'appelle</p>
+</div>
+<div ng-class='{" alert alert-danger " : main.title == "Wesh Alors",
+                        " alert alert-success" :  main.title != "Wesh Alors", }'>
+    <p>J'adore JUL</p>
+</div>
+
+<button type="button" ng-click="main.reset()">Reset</button>
+
+
+<ul>
+    <li ng-repeat="personnage in main.tableau | filter: main.title | limit: main.limited  | orderBy: prenom ">
+        {{ personnage.pseudo }}
+        <a class="btn btn-success btn-xs" ng-click="main.remove(personnage)">X</a>
+    </li>
+</ul>
+
+<form ng-submit="main.add()">
+    <input type="text" ng-model="main.pseudoAdd" placeholder="pseudo" required class="form-control">
+</form>
