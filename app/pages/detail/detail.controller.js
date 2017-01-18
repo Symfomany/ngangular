@@ -5,9 +5,10 @@
         .module('app.detail', [])
         .controller('DetailCtrl', DetailController);
 
-    DetailController.$inject = [];
-    function DetailController() {
+    DetailController.$inject = ['$stateParams'];
+    function DetailController($stateParams) {
         var vm = this;
+        console.log($stateParams.id);
 
     }
 })();
