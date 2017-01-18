@@ -49,6 +49,7 @@ let config = {
     imgDir: this.assetDir + 'images/',
     rootIndex: './index.html',
     sassFiles: [ //not order because it's oriented components
+        "app/*.scss",
         "app/pages/**/*.scss",
         "app/directives/**/*.scss",
         "app/components/**/*.scss",
@@ -57,7 +58,6 @@ let config = {
         "app/app.js",
         "app/app.config.js",
         "app/app.constants.js",
-        "app/app.routes.js",
         "app/components/**/*.component.js", //all components
         "app/directives/**/*.directive.js", //all factories
         "app/pages/**/*.controller.js", //all controllers
@@ -88,7 +88,7 @@ function handleError(err) {
 
 
 // Browser-sync task, only cares about compiled CSS
-gulp.task('browser-sync', function () {
+gulp.task('browser-sync', function() {
     browserSync({
         port: 9000,
         server: {
@@ -99,7 +99,7 @@ gulp.task('browser-sync', function () {
 });
 
 // Clean log, comments, remove old files
-gulp.task('clean', function () {
+gulp.task('clean', function() {
     return gulp.src(['dist/css', 'dist/js', 'dist/images'], { read: false })
         .pipe(clean());
 });
@@ -107,21 +107,21 @@ gulp.task('clean', function () {
 /**
  * Protractor Test
  */
-gulp.task('tests', function () {
+gulp.task('tests', function() {
     gulp.src(["./tests/e2e/**/*.spec.js"])
         .pipe(protractor({
             configFile: "./protractor.conf.js",
             args: ['--baseUrl', 'http://localhost:4000']
         }))
 
-        .on('error', function (e) { throw e })
+        .on('error', function(e) { throw e })
         .pipe(notify({ message: 'Tests lancées' }));
 });
 
 
 
 // Sass task, will run when any SCSS files change.
-gulp.task('css', function () {
+gulp.task('css', function() {
     return gulp.src(config.sassFiles)
         .pipe(plumber({
             errorHandler: notify.onError("Error: <%= error.message %>")
@@ -142,7 +142,7 @@ gulp.task('css', function () {
 
 
 //For js
-gulp.task('js', function () {
+gulp.task('js', function() {
 
     let validate = validator('./data/personnages.json')
     if (!validate.errors) {
@@ -170,7 +170,7 @@ gulp.task('js', function () {
 
 
 // Images
-gulp.task('images', function () {
+gulp.task('images', function() {
     return gulp.src('assets/images/**/*')
         .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
         .pipe(reload({ stream: true }))
@@ -180,7 +180,7 @@ gulp.task('images', function () {
 
 
 // Default task to be run with `gulp`
-gulp.task('default', ['clean', 'browser-sync', 'css', 'js'], function () {
+gulp.task('default', ['clean', 'browser-sync', 'css', 'js'], function() {
     //gulp.watch("sass/**/*.scss", ['css']); // watch permet de regarder les changements de fichier et lancer les tâches que l'on souhaite
     gulp.watch(["app/**/**/*.js"], ['js']);
     gulp.watch(["app/**/**/*.scss"], ['css']);

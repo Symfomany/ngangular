@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -6,14 +6,19 @@
             'ui.router',
             'app.main',
             'app.contact',
+            'app.footer',
             'app.about',
             'app.detail',
             'LocalStorageModule'
         ])
-        .config(configuration)
-        .config(ConfigRouter);
+        .config(configGeneral)
+        .config(configRouter);
 
-    function configuration(localStorageServiceProvider, $locationProvider) {
+    /**
+     * Configuration Generale 
+     */
+
+    function configGeneral(localStorageServiceProvider, $locationProvider) {
         localStorageServiceProvider
             .setPrefix('yourAppName')
             .setStorageType('sessionStorage');
@@ -24,12 +29,15 @@
         });
     }
 
-    function ConfigRouter($stateProvider, $urlRouterProvider) {
+    /**
+     *  Config of Router
+     */
+    function configRouter($stateProvider, $urlRouterProvider) {
 
         var main = {
             url: '/',
             resolve: {
-                personnages: function(PersonnageFactory) {
+                personnages: function (PersonnageFactory) {
                     return PersonnageFactory.all();
                 },
             },
@@ -45,17 +53,20 @@
             controllerAs: 'contact'
         };
 
-
         var detail = {
             url: '/detail/:id',
             resolve: {
-                personnage: function(PersonnageFactory, $stateParams) {
+                personnage: function (PersonnageFactory, $stateParams) {
                     return PersonnageFactory.one($stateParams.id);
                 },
             },
             templateUrl: './app/pages/detail/detail.html',
             controller: 'DetailCtrl',
             controllerAs: 'detail'
+        }
+
+        var navbar = {
+            templateUrl: './app/pages/navbar/navbar.html',
         }
 
 
@@ -69,25 +80,20 @@
                     controllerAs: 'about'
                 },
 
-                'another@about': {
-                    templateUrl: './app/pages/main/main.html',
-                    controller: 'MainCtrl',
-                    controllerAs: 'main'
-                },
-
-                'contact@about': {
-                    templateUrl: './app/pages/contact/contact.html',
-                },
-
-
+                'footer@about': {
+                    templateUrl: './app/pages/footer/footer.html',
+                    controller: 'FooterCtrl',
+                    controllerAs: 'footer'
+                }
             }
-
         };
 
         /**
          * Register all states
          */
         $stateProvider.state('main', main);
+        $stateProvider.state('navbar', navbar);
+
         $stateProvider.state('contact', contact);
         $stateProvider.state('about', about);
         $stateProvider.state('detail', detail);

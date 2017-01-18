@@ -1,0 +1,26 @@
+body{
+    .active {
+        color: red;
+        font-weight: bolder;
+    }
+    
+    .ng-invalid.ng-touched {
+        background-color: #FA787E;
+    }
+    
+    .ng-valid.ng-touched {
+        background-color: #78FA89;
+    }
+    
+    #fivePersonnages {
+        transition: all linear 0.5s;
+    }
+    
+    #fivePersonnages.ng-show {
+        opacity: 1;
+    }
+    
+    #fivePersonnages.ng-hide {
+        opacity: 0;
+    }
+}
