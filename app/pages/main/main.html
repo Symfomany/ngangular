@@ -26,32 +26,39 @@
 </div>
 
 <div class="row">
-    <rzslider rz-slider-options="main.optionsRz" rz-slider-model="main.limit"></rzslider>
+    <rzslider id="slider" rz-slider-options="main.optionsRz" rz-slider-model="main.limit"></rzslider>
+</div>
+<div class="row">
+    <button spinner action="plus" nb="main.limit" class="btn btn-success btn-sm" ng-click=""><i class="fa fa-plus"></i></button>
+    <button spinner action="moins" nb="main.limit" class="btn btn-danger btn-sm"><i class="fa fa-minus"></i></button>
 </div>
 
-
-<div class="col-md-8">
+<div class="col-md-7">
     <div class="row">
         <div ng-if="(main.tableau | filter: {pseudo:main.title} | limit: main.limit).length">
-            <h3>Liste des utilisateur<span ng-if="main.tableau.length">s</span> <i>{{ (main.tableau | filter: {pseudo:main.title} | limit: main.limit).length }} personnage<span ng-if="main.tableau.length">s</span></i></h3>
+            <h3 id="titleNb">Liste des utilisateur<span ng-if="(main.tableau | filter: {pseudo:main.title} | limit: main.limit).length">s</span>
+                <i>{{ (main.tableau | filter: {pseudo:main.title} | limit: main.limit).length }} personnage<span ng-if="(main.tableau | filter: {pseudo:main.title} | limit: main.limit).length">s</span></i></h3>
         </div>
         <div ng-if="(main.tableau | filter: {pseudo:main.title} | limit: main.limit).length == 0">
-            <h3>Aucun personnages... :(</h3>
+            <h3 id="titleNb">Aucun personnages... :(</h3>
         </div>
 
         <hr />
-        <div ng-repeat="personnage in main.tableau | filter: {pseudo:main.title} | limit: main.limit  | orderBy: prenom ">
+        <div ng-repeat="personnage in (main.tableau | filter: {pseudo:main.title} | limit: main.limit  | orderBy: personnage.pseudo) track by personnage.id">
             <div class="row">
                 <div class="col-md-2">
-                    <img class="img-responsive img-circle" src="{{ personnage.photo }}" alt="{{ personnage.pseudo }} ">
+                    <img class="img-responsive img-circle" src="{{ personnage.photo }}" alt="{{ personnage.pseudo }}">
                 </div>
                 <div class="col-md-9">
-                    <a class="pull-right btn btn-success btn-xs " ng-click="main.remove(personnage) ">
+                    <a class="pull-right btn-close btn btn-success btn-xs" ng-click="main.remove(personnage)">
                         <i class="fa fa-times"></i>
                     </a>
-                    <h3><a ui-sref="detail({id: personnage.id}) ">{{ personnage.pseudo }}</a> <small>{{ personnage.activite }}</small></h3>
+                    <h3><i class="fa" ng-class="{'fa-male' : personnage.sexe, 'fa-female' : !personnage.sexe}"></i> <a ui-sref="detail({id: personnage.id})">{{ personnage.pseudo }}</a>                        <small>{{ personnage.activite }}</small></h3>
                     <p>{{ personnage.resume|limitTo: 200 }} ... </p>
-                    <p class="label label-success "> {{ personnage.note | number: 0 }} / 5</p>
+                    <p>
+                        <star on-dbl="main.dbclick(etoile)" etoile="personnage.note"></star>
+                    </p>
+                    <p><span><i>Inscrit le {{ personnage.created|ago }}</i></span></p>
                     <span ng-click="main.plus(personnage)" class="text-success"><i class="fa fa-thumbs-up"></i> {{ personnage.like }}</span>
                     <span ng-click="main.moins(personnage)" ng-click="" class="text-danger"><i class="fa fa-thumbs-down"></i> {{ personnage.dislike }}</span>
                 </div>
@@ -59,55 +66,86 @@
         </div>
     </div>
 </div>
-<div class="col-md-4 ">
-    <h3>Ajout d'un utilsateur</h3>
-    <hr />
-    <div class="row ">
-        <form ng-submit="main.add() " class="panel " name="formAdd " novalidate>
-            <div class="panel-body ">
-                <div class="form-group ">
-                    <label>Pseudo</label>
-                    <input required name="pseudo " type="text" ng-model="main.objAdd.pseudo " placeholder="Son pseudonyme dans la série " required
-                        class="form-control ">
-                    <div class="alert alert-danger " ng-show="(formAdd.$submitted || formAdd.pseudo.$touched) && formAdd.pseudo.$error.required ">
-                        <p>Pseudo est requis</p>
+<div class="col-md-5">
+    <div class="row">
+        <h3 id="titleAdd">Ajout d'un utilisateur</h3>
+        <hr />
+        <div class="row ">
+            <form ng-submit="main.add() " class="panel " name="formAdd " novalidate>
+                <div class="panel-body ">
+                    <div class="form-group " id="sexeRadios">
+                        <label class="radio-inline" for="inlineRadio1">
+                    <input ng-model="main.objAdd.sexe" type="radio" name="sexe" id="inlineRadio1" ng-value="false"> Femme
+                    </label>
+                        <label class="radio-inline" for="inlineRadio2">
+                    <input ng-model="main.objAdd.sexe" type="radio" name="sexe" id="inlineRadio2" ng-value="true"> Homme
+                    </label>
                     </div>
-                </div>
-                <div class="form-group ">
-                    <label>Activite</label>
-                    <input required name="activite" type="url" ng-model="main.objAdd.activite" placeholder="Son role dans la serie" required
-                        class="form-control ">
-                    <div class="alert alert-danger" ng-show="(formAdd.$submitted || formAdd.activite.$touched) && formAdd.activite.$error.required ">
-                        <p>Son role est invalide</p>
-                    </div>
-                </div>
-                <div class="form-group ">
-                    <label>Photo</label>
-                    <input required name="photo" type="url" ng-model="main.objAdd.photo" placeholder="Sa photo" required class="form-control ">
-                    <div class="alert alert-danger " ng-show="(formAdd.$submitted || formAdd.pseudo.$touched) && formAdd.pseudo.$error.url ">
-                        <p>URL Photo est invalide</p>
-                    </div>
-                </div>
-                <div class="form-group ">
-                    <label>Note</label>
-                    <input required pattern="^[0-9]{1}$ " type="range " name="Sa note sur 5 " ng-model="main.objAdd.note
-                    " class="form-control " placeholder="note " min="1 " max="5 ">
-                </div>
-                <div class="form-group ">
                     <div class="form-group ">
-                        <label>Note</label>
+                        <label>Pseudo <span class="text-danger">*</span></label>
+                        <input required pattern="^.{3,}$" name="pseudo " type="text" ng-model="main.objAdd.pseudo" placeholder="Son pseudonyme dans la série "
+                            required class="form-control ">
+                        <div class="alert alert-danger " ng-show="(formAdd.$submitted || formAdd.pseudo.$touched) && formAdd.pseudo.$error.required ">
+                            <p>Pseudo est requis</p>
+                        </div>
                     </div>
-                    <div ng-show="formAdd.$submitted || formAdd.note.$touched ">
-                        <div ng-show="formAdd.note.$error.pattern ">Pattern note</div>
+                    <div class="form-group ">
+                        <label>Activite <span class="text-danger">*</span></label>
+                        <input blacklist required pattern="^.{3,}$" name="activite" type="text" ng-model="main.objAdd.activite" placeholder="Son role dans la serie"
+                            required class="form-control ">
+                        <div class="alert alert-danger" ng-show="(formAdd.$submitted || formAdd.activite.$touched) && formAdd.activite.$error.required ">
+                            <p>Son role est invalide</p>
+                        </div>
+                        <div class="alert alert-warning" ng-show="(formAdd.$submitted || formAdd.activite.$touched) && formAdd.activite.$error.blacklist ">
+                            <p>Son role est interdis</p>
+                        </div>
                     </div>
-                </div>
+                    <div class="form-group ">
+                        <label>Photo <span class="text-danger">*</span></label>
+                        <input required name="photo" type="url" ng-model="main.objAdd.photo" placeholder="Sa photo" required class="form-control ">
+                        <div class="alert alert-danger " ng-show="(formAdd.$submitted || formAdd.pseudo.$touched) && formAdd.pseudo.$error.url ">
+                            <p>URL Photo est invalide</p>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="pays">Pays <span class="text-danger">*</span></label>
+                        <select class="form-control" required name="pays" id="pays" ng-model="main.objAdd.pays">
+                        <option value="">Choisissez un pays</option>
+                        <option value="france">France</option>
+                        <option value="etats-unis">Etats-Unis</option>
+                        <option value="espagne">Espagne</option>
+                        <option value="italie">Italie</option>
+                        <option value="angleterre">Grande Bretagne</option>
+                    </select>
+                        <div ng-show="formAdd.$submitted || formAdd.pays.$touched">
+                            <div ng-show="formAdd.pays.$error.required">Pays obligatoire</div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label>Note <span class="text-danger">*</span></label>
+                        <input required type="range" name="Sa note sur 5" ng-model="main.objAdd.note" class="form-control" placeholder="note " min="1"
+                            max="5">
+                    </div>
+                    <div class="form-group ">
+                        <div class="form-group ">
+                            <label>Résumé dans la série <span class="text-danger">*</span></label>
+                        </div>
+                        <div ng-show="formAdd.$submitted || formAdd.note.$touched">
+                            <div ng-show="formAdd.note.$error.pattern">Mauvais résumé</div>
+                        </div>
+                    </div>
 
-                <div class="form-group ">
-                    <textarea ng-pattern="/^[a-z\-\ ]{5,}$/i " required placeholder="Le resume du personnage
-                    " ng-model="main.objAdd.resume " name="resume " class="form-control "></textarea>
+                    <div class="form-group ">
+                        <textarea ng-pattern="/^[a-z\-\ ]{5,}$/i" required placeholder="Le resume du personnage" ng-model="main.objAdd.resume" name="resume"
+                            class="form-control"></textarea>
+                    </div>
+                    <button ng-disabled="formAdd.$invalid " id="sendForm" class="btn btn-success " type="submit ">Enregistrer ce personnage</button>
                 </div>
-                <button ng-disabled="formAdd.$invalid " class="btn btn-success " type="submit ">Enregistrer ce personnage</button>
-            </div>
-        </form>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <map coords="{lat: 45.708030, lng: 4.995003}" users="main.tableau"></map>
     </div>
 </div>
